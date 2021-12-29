@@ -1,0 +1,17 @@
+Skapa bloggfunktion
+- Skapa inlägg (logga användaren och id?)
+- Radera inlägg
+- (Ändra inlägg?)
+- Se alla blogginlägg
+- Se alla blogginlägg från en viss användare
+
+- Kommentera på inlägg (logga användaren och id?)
+- Radera kommentarer
+- (Ändra kommentarer?)
+
+- Hitta sätt att representera likes/dislikes
+
+Tänk på:
+Inlägg ska vara i en collection.
+Kommentarer ska vara i en collection.
+Hur ser end points ut?
