@@ -49,16 +49,22 @@ def home():
 @app.route(BASE_URL + 'create_user',methods = ['POST'])
 def add_user():
     post_data = flask.request.json
-    valid_keys = ["id", "username"]
+    valid_keys = ["username"]
     for key in post_data:
         if key not in valid_keys:
             return flask.Response('{"status": "Error", "reason": "Json format error. Key ' + key + 'not allowed."}',
                                   400, content_type="application/json")
 
-        users = read_users()
-        users.append(post_data)
-        save_users(users)
-        return flask.Response('{"status" : "Created"}', 201, content_type="application/json")
+        new_username = post_data
+        userdict = read_users()
+        for user in userdict:
+            if user in userdict is new_username:
+                return flask.Response('{"status" : "User Already Exists."}', 418, content_type="application/json")
+            else:
+                userdict.append(post_data)
+                save_users(userdict)
+                return flask.Response('{"status" : "Created"}', 201, content_type="application/json")
+
 
 
 @app.route(BASE_URL + 'create_post', methods = ['POST'])
@@ -74,7 +80,6 @@ def add_post():
         posts.append(post_data)
         save_posts(posts)
         return flask.Response('{"status" : "Created"}', 201, content_type="application/json")
-
 
 
 @app.route(BASE_URL + 'get_all_posts', methods=['GET'])
@@ -109,8 +114,9 @@ def get_user():
     return jsonify(results)
 
 
+# WIP
 @app.route(BASE_URL + 'get_posts_by_user', methods=['GET'])
-def get_user():
+def get_posts_by_user():
     if 'username' in request.args:
         username = str(request.args['username'])
     else:
