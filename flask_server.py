@@ -9,22 +9,25 @@ app.config["DEBUG"] = True
 
 BASE_URL = '/v3/'
 
+
 def read_posts():
     with open("posts.json", "r", encoding="utf-8") as json_file:
         return json.load(json_file)
+
 
 def save_posts(data):
     with open("posts.json", "w") as json_file:
         json.dump(data, json_file)
 
+
 def read_users():
     with open("user.json", "r", encoding="utf-8") as json_file:
         return json.load(json_file)
 
+
 def save_users(data):
     with open("user.json", "w") as json_file:
         json.dump(data, json_file)
-
 
 
 def read_data():
@@ -42,8 +45,7 @@ def home():
     return '<h1>O shit waddup<h1/><br/> <img src="https://cdn.shopify.com/s/files/1/0160/2840/1712/products/datboi_concept.png?v=1586043523">'
 
 
-#{"id": 7,"username": "NewUser"}
-
+#TODO Generate ID with UUID instead of accepting it as a parameter
 @app.route(BASE_URL + 'create_user',methods = ['POST'])
 def add_user():
     post_data = flask.request.json
@@ -89,7 +91,40 @@ def all_users():
     return flask.Response(json_posts, 200, content_type="application/json")
 
 
+@app.route(BASE_URL + 'get_user', methods=['GET'])
+def get_user():
+    if 'username' in request.args:
+        username = str(request.args['username'])
+    else:
+        return "Error: No id field provided. Please specify an id."
 
+    results = []
+    with open("user.json", "r", encoding="utf-8") as json_file:
+        users = json.load(json_file)
+
+    for user in users:
+        if user['username'] == username:
+            results.append(user)
+
+    return jsonify(results)
+
+
+@app.route(BASE_URL + 'get_posts_by_user', methods=['GET'])
+def get_user():
+    if 'username' in request.args:
+        username = str(request.args['username'])
+    else:
+        return "Error: No id field provided. Please specify an id."
+
+    results = []
+    with open("user.json", "r", encoding="utf-8") as json_file:
+        users = json.load(json_file)
+
+    for user in users:
+        if user['username'] == username:
+            results.append(user)
+
+    return jsonify(results)
 
 #End of my own code
 
