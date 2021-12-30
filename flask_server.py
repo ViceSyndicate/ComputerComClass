@@ -45,7 +45,7 @@ def home():
 #{"id": 7,"username": "NewUser"}
 
 @app.route(BASE_URL + 'create_user',methods = ['POST'])
-def add_post():
+def add_user():
     post_data = flask.request.json
     valid_keys = ["id", "username"]
     for key in post_data:
@@ -59,11 +59,39 @@ def add_post():
         return flask.Response('{"status" : "Created"}', 201, content_type="application/json")
 
 
-@app.route(BASE_URL + 'all', methods=['GET'])
+@app.route(BASE_URL + 'create_post', methods = ['POST'])
+def add_post():
+    post_data = flask.request.json
+    valid_keys = ["id", "username", 'content']
+    for key in post_data:
+        if key not in valid_keys:
+            return flask.Response('{"status": "Error", "reason": "Json format error. Key ' + key + 'not allowed."}',
+                                  400, content_type="application/json")
+
+        posts = read_posts()
+        posts.append(post_data)
+        save_posts(posts)
+        return flask.Response('{"status" : "Created"}', 201, content_type="application/json")
+
+
+
+@app.route(BASE_URL + 'get_all_posts', methods=['GET'])
 def all_posts():
     posts = read_posts()
     json_posts = json.dumps(posts)
     return flask.Response(json_posts, 200, content_type="application/json")
+
+
+@app.route(BASE_URL + 'get_all_users', methods=['GET'])
+def all_users():
+    users = read_users()
+    json_posts = json.dumps(users)
+    return flask.Response(json_posts, 200, content_type="application/json")
+
+
+
+
+#End of my own code
 
 
 @app.get('/v1/persons')
