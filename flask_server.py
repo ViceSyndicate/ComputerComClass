@@ -1,5 +1,6 @@
 import flask
 import json
+import uuid
 import time
 from flask import request,Response, jsonify, url_for
 from urllib3.util import current_time
@@ -8,6 +9,14 @@ app = flask.Flask(__name__)
 app.config["DEBUG"] = True
 
 BASE_URL = '/v3/'
+
+
+class User:
+    uuid = uuid.uuid4()
+
+    def __init__(self, name):
+        self.id = id
+        self.name = name
 
 
 def read_posts():
@@ -45,7 +54,6 @@ def home():
     return '<h1>O shit waddup<h1/><br/> <img src="https://cdn.shopify.com/s/files/1/0160/2840/1712/products/datboi_concept.png?v=1586043523">'
 
 
-#TODO Generate ID with UUID instead of accepting it as a parameter
 @app.route(BASE_URL + 'create_user',methods = ['POST'])
 def add_user():
     post_data = flask.request.json
@@ -55,15 +63,20 @@ def add_user():
             return flask.Response('{"status": "Error", "reason": "Json format error. Key ' + key + 'not allowed."}',
                                   400, content_type="application/json")
 
-        new_username = post_data
-        userdict = read_users()
-        for user in userdict:
-            if user in userdict is new_username:
-                return flask.Response('{"status" : "User Already Exists."}', 418, content_type="application/json")
-            else:
-                userdict.append(post_data)
-                save_users(userdict)
-                return flask.Response('{"status" : "Created"}', 201, content_type="application/json")
+        new_username = post_data.get("username")
+        new_uuid = uuid.uuid4()
+        new_id = str(new_uuid)
+
+        user_dictionary = read_users()
+
+        for users in user_dictionary:
+            if users.get("username") == new_username:
+                return flask.Response('{"status" : "Username Already Exists."}', 418, content_type="application/json")
+
+        new_user = {'id': new_id, 'username': new_username}
+        user_dictionary.append(new_user)
+        save_users(user_dictionary)
+        return flask.Response('{"status" : "Created"}', 201, content_type="application/json")
 
 
 

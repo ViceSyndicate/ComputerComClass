@@ -1,1 +1,4 @@
-[{"id": 0, "username": "Vice"}, {"id": 1, "username": "Jane"}, {"id": 2, "username": "John"}, {"id": 3, "username": "Timmy"}, {"id": 4, "username": "NewUser"}, {"id": 7, "username": "NewUser"}]
+[{"id": "6c1f4897-a66d-4441-97a1-1dce30f33e89", "username": "Vice"},
+  {"id": "727f861c-4909-41eb-b9be-3f87722e14a8", "username": "Dice"},
+  {"id": "0e527f2e-08ba-461d-8571-374cb0ec1b62", "username": "Nice"}
+]
