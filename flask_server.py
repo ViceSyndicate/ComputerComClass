@@ -83,14 +83,21 @@ def add_user():
 @app.route(BASE_URL + 'create_post', methods = ['POST'])
 def add_post():
     post_data = flask.request.json
-    valid_keys = ["id", "username", 'content']
+    valid_keys = ["username", 'content']
     for key in post_data:
         if key not in valid_keys:
             return flask.Response('{"status": "Error", "reason": "Json format error. Key ' + key + 'not allowed."}',
                                   400, content_type="application/json")
 
+        post_id = str(uuid.uuid4())
+        username = post_data.get("username")
+        content = post_data.get("content")
+        #post_data.update({"id": post_id})
+
+        new_post = {'id': post_id, 'username': username, 'content': content}
+
         posts = read_posts()
-        posts.append(post_data)
+        posts.append(new_post)
         save_posts(posts)
         return flask.Response('{"status" : "Created"}', 201, content_type="application/json")
 
@@ -114,7 +121,7 @@ def get_user():
     if 'username' in request.args:
         username = str(request.args['username'])
     else:
-        return "Error: No id field provided. Please specify an id."
+        return "Error: No id field provided. Please specify a username."
 
     results = []
     with open("user.json", "r", encoding="utf-8") as json_file:
