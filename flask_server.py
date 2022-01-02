@@ -134,21 +134,23 @@ def get_user():
     return jsonify(results)
 
 
-# WIP
 @app.route(BASE_URL + 'get_posts_by_user', methods=['GET'])
 def get_posts_by_user():
-    if 'username' in request.args:
-        username = str(request.args['username'])
-    else:
-        return "Error: No id field provided. Please specify an id."
+    if 'username' not in request.args:
+        return "Error: No username field provided."
 
-    results = []
+    username = str(request.args['username'])
+
     with open("user.json", "r", encoding="utf-8") as json_file:
         users = json.load(json_file)
 
-    for user in users:
-        if user['username'] == username:
-            results.append(user)
+    with open("posts.json", "r", encoding="utf-8") as json_file:
+        posts = json.load(json_file)
+
+    results = []
+    for post in posts:
+        if post.get('username') == username:
+            results.append(post)
 
     return jsonify(results)
 

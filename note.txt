@@ -1,9 +1,9 @@
 Skapa bloggfunktion
-- Skapa inlägg (logga användaren och id?)
+✓ Skapa inlägg (logga användaren och id?)
 - Radera inlägg
 - (Ändra inlägg?)
 ✓ Se alla blogginlägg
-- Se alla blogginlägg från en viss användare
+✓ Se alla blogginlägg från en viss användare
 
 - Kommentera på inlägg (logga användaren och id?)
 - Radera kommentarer
