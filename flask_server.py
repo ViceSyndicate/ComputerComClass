@@ -79,7 +79,6 @@ def add_user():
         return flask.Response('{"status" : "Created"}', 201, content_type="application/json")
 
 
-
 @app.route(BASE_URL + 'create_post', methods = ['POST'])
 def add_post():
     post_data = flask.request.json
@@ -153,6 +152,27 @@ def get_posts_by_user():
             results.append(post)
 
     return jsonify(results)
+
+
+# WIP
+@app.route(BASE_URL + 'delete_post', methods=['POST'])
+def delete_post_by_id():
+    if 'id' not in request.args:
+        return "Error: No id field provided."
+    id = str(request.args['id'])
+
+    all_posts = read_all_posts()
+    pos_to_delete = 0
+    for i in range(len(all_posts)):
+        print(i)
+        if all_posts(i).get('id') == id:
+            pos_to_delete = i
+
+
+    for post in all_posts:
+        if post.get('id') == id:
+            print(post)
+    return
 
 #End of my own code
 
