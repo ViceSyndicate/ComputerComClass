@@ -56,7 +56,7 @@ def home():
 
 @app.route(BASE_URL + 'create_user',methods = ['POST'])
 def add_user():
-    post_data = flask.request.json
+    post_data = request.args
     valid_keys = ["username"]
     for key in post_data:
         if key not in valid_keys:
@@ -81,7 +81,7 @@ def add_user():
 
 @app.route(BASE_URL + 'create_post', methods = ['POST'])
 def add_post():
-    post_data = flask.request.json
+    post_data = request.args
     valid_keys = ["username", 'content']
     for key in post_data:
         if key not in valid_keys:
@@ -159,20 +159,22 @@ def get_posts_by_user():
 def delete_post_by_id():
     if 'id' not in request.args:
         return "Error: No id field provided."
-    id = str(request.args['id'])
+    code_id = str(request.args['id'])
 
     all_posts = read_all_posts()
-    pos_to_delete = 0
+    pos_to_delete = None
     for i in range(len(all_posts)):
-        print(i)
-        if all_posts(i).get('id') == id:
+        if str(all_posts[i].get('id')) == code_id:
             pos_to_delete = i
 
+    if pos_to_delete is None:
+        return "Error: Could not find post with this id."
 
-    for post in all_posts:
-        if post.get('id') == id:
-            print(post)
-    return
+    del all_posts[pos_to_delete]
+
+    save_posts(all_posts)
+
+    return "Post was Successfully deleted."
 
 #End of my own code
 
@@ -225,7 +227,7 @@ def index_post():
     save_data(persons)
     return flask.Response('{"status" : "Created"}', 201, content_type="application/json")
 
-# Gregs/My Recent Code Starts Here
+# Gregs Code Starts Here
 
 
 def save_posts(data):
