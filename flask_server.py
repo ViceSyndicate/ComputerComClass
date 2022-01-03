@@ -154,28 +154,55 @@ def get_posts_by_user():
     return jsonify(results)
 
 
-# WIP
 @app.route(BASE_URL + 'delete_post', methods=['POST'])
 def delete_post_by_id():
     if 'id' not in request.args:
         return "Error: No id field provided."
-    code_id = str(request.args['id'])
+    post_id = str(request.args['id'])
 
-    all_posts = read_all_posts()
+    list_of_all_posts = read_all_posts()
     pos_to_delete = None
-    for i in range(len(all_posts)):
-        if str(all_posts[i].get('id')) == code_id:
+    for i in range(len(list_of_all_posts)):
+        if str(list_of_all_posts[i].get('id')) == post_id:
             pos_to_delete = i
 
     if pos_to_delete is None:
         return "Error: Could not find post with this id."
 
-    del all_posts[pos_to_delete]
+    del list_of_all_posts[pos_to_delete]
 
-    save_posts(all_posts)
+    save_posts(list_of_all_posts)
 
     return "Post was Successfully deleted."
 
+
+@app.route(BASE_URL + 'update_post', methods=['POST'])
+def update_post():
+
+    valid_keys = ['id', 'content']
+    for key in request.args:
+        if key not in valid_keys:
+            return flask.Response('{"status": "Error", "reason": "Json format error. Key ' + key + 'not allowed."}',
+                                  400, content_type="application/json")
+
+    post_id = str(request.args['id'])
+    post_updated_content = str(request.args['content'])
+
+    list_of_posts = read_posts()
+    post_to_update = None
+
+    for i in range(len(list_of_posts)):
+        if str(list_of_posts[i].get('id')) == post_id:
+            post_to_update = i
+
+    if post_to_update is None:
+        return "Error: Could not find post with this id."
+
+    list_of_posts[post_to_update]['content'] = post_updated_content
+
+    save_posts(list_of_posts)
+
+    return 'Post Updated.'
 #End of my own code
 
 
