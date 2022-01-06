@@ -93,7 +93,7 @@ def add_post():
         content = post_data.get("content")
         #post_data.update({"id": post_id})
 
-        new_post = {'id': post_id, 'username': username, 'content': content}
+        new_post = {'id': post_id, 'username': username, 'content': content, 'comments': []}
 
         posts = read_posts()
         posts.append(new_post)
@@ -203,7 +203,53 @@ def update_post():
     save_posts(list_of_posts)
 
     return 'Post Updated.'
+
+
+@app.route(BASE_URL + 'comment_on_post', methods=['POST'])
+def comment_on_post():
+
+    valid_keys = ['id','username', 'comment']
+    for key in request.args:
+        if key not in valid_keys:
+            return flask.Response('{"status": "Error", "reason": "Json format error. Key ' + key + 'not allowed."}',
+                                  400, content_type="application/json")
+
+    post_id = str(request.args['id'])
+    post_username = str(request.args['username'])
+    post_comment = str(request.args['comment'])
+
+    list_of_posts = read_posts()
+    index_of_post = None
+
+    for i in range(len(list_of_posts)):
+        if str(list_of_posts[i].get('id')) == post_id:
+            index_of_post = i
+
+    if index_of_post is None:
+        return "Error: Could not find post with this id."
+
+    comment_id = str(uuid.uuid4())
+
+    new_comment = {'id': comment_id, 'username': post_username, 'comment': post_comment}
+
+    #list_of_posts[index_of_post]['comments']['id'] = comment_id
+    #list_of_posts[index_of_post]['comments']['username'] = post_username
+    #list_of_posts[index_of_post]['comments']['comment'] = post_comment
+
+    list_of_posts[index_of_post]['comments'].append(new_comment)
+
+    save_posts(list_of_posts)
+
+    return 'Comment Posted.'
+
+
+
+
+
+
+
 #End of my own code
+#----------------------------------------------------------------------------------------------
 
 
 @app.get('/v1/persons')
